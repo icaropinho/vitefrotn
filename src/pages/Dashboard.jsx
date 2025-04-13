@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,8 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Menu, MenuItem } from "@/components/ui/menu";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { MenuIcon, Moon, Sun, Download } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const [problem, setProblem] = useState('');
@@ -18,9 +16,17 @@ export default function Dashboard() {
   const [sessionId, setSessionId] = useState(null);
   const [question, setQuestion] = useState('');
   const [finalResult, setFinalResult] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
-  const { theme, setTheme } = useTheme();
-  const api = process.env.REACT_APP_API_URL;
+  const api = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   const startSession = async () => {
     try {
@@ -69,8 +75,8 @@ export default function Dashboard() {
       <header className="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 shadow-md">
         <h1 className="text-xl font-bold">5 Porquês IA</h1>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <Button variant="ghost" size="icon" onClick={() => setDarkMode(!darkMode)}>
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
           <Sheet>
             <SheetTrigger asChild>
